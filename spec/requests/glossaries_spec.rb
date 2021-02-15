@@ -30,4 +30,24 @@ RSpec.describe 'Glossaries', type: :request do
       end
     end
   end
+
+  describe 'GET /glossaries' do
+    let!(:glossary) { create(:glossary) }
+    let!(:glossary2) { create(:glossary) }
+
+    it 'return list of glossaries' do
+      get '/glossaries'
+      expect(json_body.size).to eq(2)
+      expect(json_body.map { |j| j['id'] }).to match_array([glossary.id, glossary2.id])
+    end
+  end
+
+  describe 'GET /glossaries/:id' do
+    let!(:glossary) { create(:glossary) }
+
+    it 'return glossary' do
+      get "/glossaries/#{glossary.id}"
+      expect(json_body['id']).to eq(glossary.id)
+    end
+  end
 end
