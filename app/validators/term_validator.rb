@@ -6,7 +6,6 @@ class TermValidator < ApplicationValidator
   validate :valid_terms
 
   def presence_terms
-    puts "source_term: #{source_term}"
     return if source_term.present? && target_term.present?
 
     errors.add(:base, 'Source term and Target term must present')
