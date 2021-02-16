@@ -7,7 +7,7 @@ RSpec.describe 'Glossaries', type: :request do
     it 'create glossary' do
       post '/glossaries', params: { source_language_code: 'en', target_language_code: 'nl' }
       expect(response).to have_http_status(200)
-      expect(json_body.keys).to match_array(%w[id source_language_code target_language_code])
+      expect(json_body.keys).to match_array(%w[id source_language_code target_language_code terms])
       expect(json_body).to include('source_language_code' => 'en', 'target_language_code' => 'nl')
     end
 
@@ -31,20 +31,24 @@ RSpec.describe 'Glossaries', type: :request do
   describe 'GET /glossaries' do
     let!(:glossary) { create(:glossary) }
     let!(:glossary2) { create(:glossary) }
+    let!(:term) { create(:term, glossary: glossary) }
 
     it 'return list of glossaries' do
       get '/glossaries'
       expect(json_body.size).to eq(2)
       expect(json_body.map { |j| j['id'] }).to match_array([glossary.id, glossary2.id])
+      expect(json_body.first['terms'].first['id']).to eq(term.id)
     end
   end
 
   describe 'GET /glossaries/:id' do
     let!(:glossary) { create(:glossary) }
+    let!(:term) { create(:term, glossary: glossary) }
 
     it 'return glossary' do
       get "/glossaries/#{glossary.id}"
       expect(json_body['id']).to eq(glossary.id)
+      expect(json_body['terms'].first['id']).to eq(term.id)
     end
   end
 end
