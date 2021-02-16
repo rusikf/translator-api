@@ -3,9 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe 'Glossaries', type: :request do
-  def json_body
-    JSON.parse(response.body)
-  end
   describe 'POST /glossaries' do
     it 'create glossary' do
       post '/glossaries', params: { source_language_code: 'en', target_language_code: 'nl' }

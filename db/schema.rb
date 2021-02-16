@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_12_192119) do
+ActiveRecord::Schema.define(version: 2021_02_15_152222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,16 @@ ActiveRecord::Schema.define(version: 2021_02_12_192119) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["source_language_code", "target_language_code"], name: "unique_code_index", unique: true
+  end
+
+  create_table "terms", force: :cascade do |t|
+    t.bigint "glossary_id"
+    t.string "source_term"
+    t.string "target_term"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["glossary_id"], name: "index_terms_on_glossary_id"
+    t.index ["source_term", "target_term"], name: "index_terms_on_source_term_and_target_term", unique: true
   end
 
 end
