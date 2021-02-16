@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_15_152222) do
+ActiveRecord::Schema.define(version: 2021_02_16_105256) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,16 @@ ActiveRecord::Schema.define(version: 2021_02_15_152222) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["glossary_id"], name: "index_terms_on_glossary_id"
     t.index ["source_term", "target_term"], name: "index_terms_on_source_term_and_target_term", unique: true
+  end
+
+  create_table "translations", force: :cascade do |t|
+    t.text "source_text"
+    t.string "source_language_code"
+    t.string "target_language_code"
+    t.bigint "glossary_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["glossary_id"], name: "index_translations_on_glossary_id"
   end
 
 end

@@ -5,4 +5,6 @@ Rails.application.routes.draw do
   resources :glossaries, only: %i[create show index] do
     resources :terms, only: %i[create]
   end
+
+  resources :translations, only: %i[create show]
 end
