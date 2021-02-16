@@ -17,7 +17,7 @@ class TranslationsController < ApplicationController
   end
 
   def show
-    render json: representer.new(translation)
+    render json: TranslationDetailsRepresenter.new(translation)
   end
 
   private

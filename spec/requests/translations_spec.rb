@@ -3,6 +3,38 @@
 require 'rails_helper'
 
 RSpec.describe 'Translations', type: :request do
+  describe 'GET /translations/:id' do
+    context 'with glossary' do
+      let!(:glossary) { create(:glossary, :en_nl) }
+      let!(:term) { create(:term, glossary: glossary, source_term: 'recruitment') }
+      let!(:translation) { create(:translation, glossary: glossary, source_text: 'This is a recruitment task') }
+
+      it 'have highlighted_source_text' do
+        get "/translations/#{translation.id}"
+        expect(response).to have_http_status(200)
+        expect(json_body.keys).to match_array(%w[source_text glossary_terms highlighted_source_text])
+        expect(json_body).to include(
+          'source_text' => 'This is a recruitment task',
+          'glossary_terms' => ['recruitment'],
+          'highlighted_source_text' => 'This is a <HIGHLIGHT>recruitment</HIGHLIGHT> task'
+        )
+      end
+    end
+
+    context 'without glossary' do
+      let!(:translation) { create(:translation, source_text: 'This is a recruitment task') }
+      it 'success' do
+        get "/translations/#{translation.id}"
+        expect(response).to have_http_status(200)
+        expect(json_body.keys).to match_array(%w[source_text glossary_terms highlighted_source_text])
+        expect(json_body).to include(
+          'source_text' => 'This is a recruitment task',
+          'glossary_terms' => []
+        )
+      end
+    end
+  end
+
   describe 'POST /translations' do
     let!(:glossary) { create(:glossary, source_language_code: 'en', target_language_code: 'nl') }
     let(:endpoint) { '/translations' }
